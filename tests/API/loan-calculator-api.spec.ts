@@ -1,6 +1,7 @@
-import { expect, test } from '@playwright/test'
-import { StatusCodes } from 'http-status-codes'
-import { LoanCalculatorDto} from "../Dto/loan-calculator-dto"
+import {expect, test} from '@playwright/test'
+import {StatusCodes} from 'http-status-codes'
+import {LoanCalculatorDto} from "../Dto/loan-calculator-dto"
+import {LoanCalculatorPage} from "../Pages/loan-calculator-page";
 const baseUrl = 'https://taotlus.bigbank.ee/api/v1/loan/calculate'
 
 test('Test loan calculator API with empty body', async ({ request }) => {
@@ -143,4 +144,21 @@ test('Test loan calculator API using string for period', async ( {request}) => {
         data: loanData,
     })
     expect.soft(response.status()).toBe(StatusCodes.BAD_REQUEST)
+})
+
+test.only('Test loan calculator API using mock', async ( {page}) => {
+    await page.route(baseUrl, async (route) => {
+        const responseBody = {
+            "totalRepayableAmount": 10,
+            "monthlyPayment": 1,
+            "apr": 2
+        }
+        await route.fulfill({
+            status: 200,
+            json: responseBody,
+        })
+    })
+    const loanCalculatorPage = new LoanCalculatorPage(page)
+    await loanCalculatorPage.openPage()
+    await expect.soft(loanCalculatorPage.monthlyPayment).toContainText('1.00')
 })
