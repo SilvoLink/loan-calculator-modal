@@ -146,7 +146,7 @@ test('Test loan calculator API using string for period', async ( {request}) => {
     expect.soft(response.status()).toBe(StatusCodes.BAD_REQUEST)
 })
 
-test.only('Test loan calculator API using mock', async ( {page}) => {
+test('Test loan calculator API using mock', async ( {page}) => {
     await page.route(baseUrl, async (route) => {
         const responseBody = {
             "totalRepayableAmount": 10,
