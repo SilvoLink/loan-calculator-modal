@@ -27,7 +27,6 @@ test('Test loan calculator API using maximum accepted values for amount and peri
         data: loanData,
     })
     const responseBody = await response.json()
-    console.log(responseBody)
     expect.soft(responseBody.totalRepayableAmount).toBe(60351.24)
     expect.soft(responseBody.monthlyPayment).toBe(501.39)
     expect.soft(responseBody.apr).toBe(17.25)
